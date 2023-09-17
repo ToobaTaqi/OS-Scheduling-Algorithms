@@ -1,0 +1,92 @@
+/* rgb(151 143 184) */
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  height: 100vh;
+  font-family: "Cute Font", cursive;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: rgb(107 87 216); */
+  /* background-image: url(https://wallpapers.com/images/featured/pastel-purple-5zg9l3tzlctx5mxx.jpg); */
+  background-image: url("./bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  color: white;
+}
+
+.box {
+  border: 1px solid white;
+  border-radius: 15px;
+  /* background-color: #e8f5f5; */
+
+  /* margin-top: 30vw; */
+  /* margin-top: 10px; */
+  margin-inline: 80px;
+  height: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  background-color: rgba(255, 255, 255, 0.2);
+  /* background-color: #a4b0d8; */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+@media (max-width: 768px) {
+  body {
+    background-image: url("./bg2.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    /* color: black; */
+  }
+  .box {
+    border: 1px solid white;
+    border-radius: 15px;
+    background-color: #e8f5f5;
+    display: flex;
+    margin-inline: 5vw;
+    justify-content: center;
+
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+}
+.lnk {
+  text-decoration: none;
+  color: white;
+  border: 1px solid #acb7dc;
+  width: fit-content;
+  align-self: center;
+  margin: 2px;
+  /* max-width: 50px; */
+}
+.lnk:hover {
+  background-color: white;
+  color: #acb7dc;
+}
+.hdr {
+  border: 1px solid white;
+  margin: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* background-color: rgba(255, 255, 255, 0.2); */
+  background-color: #a4b0d8;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+input {
+  border: 3px solid #acb7dc;
+  border-radius: 15px;
+  text-align: center;
+  color: #acb7dc;
+  /* width: fit-content; */
+}

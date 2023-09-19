@@ -12,6 +12,7 @@ export default function HRRN() {
   );
   const [responseRatios, setResponseRatios] = useState([]); // Response Ratios
   const [startingTimes, setStartingTimes] = useState([]); // Starting Times
+  const [ganttChart, setGanttChart] = useState([]);
 
   // Function to handle input change for the number of processes
   const handleInputChange = (e) => {
@@ -25,6 +26,7 @@ export default function HRRN() {
     setNormalizedTurnaroundTimes(Array(numProcesses).fill(0));
     setResponseRatios(Array(numProcesses).fill(0));
     setStartingTimes(Array(numProcesses).fill(0));
+    setGanttChart([]);
   };
 
   // Function to handle input change for arrival times
@@ -35,11 +37,6 @@ export default function HRRN() {
   };
 
   // Function to handle input change for burst times
-  // const handleBurstTimeChange = (index, value) => {
-  //   const newBurstTimes = [...burstTimes];
-  //   newBurstTimes[index] = parseInt(value, 10);
-  //   setBurstTimes(newBurstTimes);
-  // };
   const handleBurstTimeChange = (index, value) => {
     const newBurstTimes = [...burstTimes];
     const parsedValue = parseInt(value, 10);
@@ -125,6 +122,12 @@ export default function HRRN() {
 
       // Update the response ratio for the selected process
       newResponseRatios[selectedProcess] = highestResponseRatio;
+
+      // Update the Gantt chart
+      setGanttChart((prevGanttChart) => [
+        ...prevGanttChart,
+        `P${selectedProcess + 1}`,
+      ]);
     }
 
     // Update state variables with the new values
@@ -152,7 +155,7 @@ export default function HRRN() {
   };
 
   return (
-    <div className=" d-flex flex-column align-items-center justify-content-center">
+    <div className="d-flex flex-column align-items-center justify-content-center">
       <h4 className="text-center">
         <u>
           <b>Highest Response Ratio Next Algorithm</b>
@@ -186,7 +189,9 @@ export default function HRRN() {
                 min={0}
                 style={{ width: "6vw" }}
                 value={arrival}
-                onChange={(e) => handleArrivalTimeChange(index, e.target.value)}
+                onChange={(e) =>
+                  handleArrivalTimeChange(index, e.target.value)
+                }
               />
             </label>
             <label>
@@ -196,7 +201,9 @@ export default function HRRN() {
                 min={0}
                 style={{ width: "6vw" }}
                 value={burstTimes[index]}
-                onChange={(e) => handleBurstTimeChange(index, e.target.value)}
+                onChange={(e) =>
+                  handleBurstTimeChange(index, e.target.value)
+                }
               />
             </label>
           </div>
@@ -217,7 +224,16 @@ export default function HRRN() {
             backgroundColor: "white",
           }}
         >
-          <table>
+          <h3>Gantt Chart</h3>
+          <div className="gantt-chart horizontal d-flex flex-row">
+            {ganttChart.map((process, index) => (
+              <div key={index} style={{ textAlign: "center" }} className="gantt-bar">{" | "}
+                {process}
+              </div>
+            ))}
+          </div>
+          <h3>Process Table</h3>
+          <table> 
             <thead>
               <tr>
                 <th> - Process -</th>

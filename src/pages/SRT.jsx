@@ -10,16 +10,9 @@ export default function Srt() {
   const [avgWt, setAvgWt] = useState(0); // Average waiting time
   const [avgTat, setAvgTat] = useState(0); // Average turnaround time
   const [startingTimes, setStartingTimes] = useState([]);
+  const [ganttChart, setGanttChart] = useState([]);
+  
 
-  //   const handleInputChange = (event) => {
-  //     const { name, value } = event.target;
-  //     if (name === "n") {
-  //       // Update the number of processes and initialize arrays
-  //       setN(value);
-  //       setArrivalTimes(new Array(parseInt(value)).fill(0));
-  //       setBurstTimes(new Array(parseInt(value)).fill(0));
-  //     }
-  //   };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (name === "n") {
@@ -37,33 +30,21 @@ export default function Srt() {
     setArrivalTimes(newArrivalTimes);
   };
 
-  // const handleBurstTimeChange = (index, value) => {
-  //   const newBurstTimes = [...burstTimes];
-  //   newBurstTimes[index] = parseInt(value, 10);
-  //   setBurstTimes(newBurstTimes);
-  // };
   const handleBurstTimeChange = (index, value) => {
     const newBurstTimes = [...burstTimes];
     const parsedValue = parseInt(value, 10);
-  
-    // Check if the parsed value is a positive integer
+
     if (!isNaN(parsedValue) && parsedValue > 0) {
       newBurstTimes[index] = parsedValue;
     } else {
-      // Display an error message or handle the validation error as needed
       alert("Burst time must be a positive integer greater than 0.");
-      // Optionally, you can set a default burst time or handle the error differently.
-      // newBurstTimes[index] = 1; // Set a default burst time of 1
     }
-  
+
     setBurstTimes(newBurstTimes);
   };
-  
 
   const findWaitingTurnaroundCompletionTime = () => {
-    const n = arrivalTimes.length; // Get the number of processes
-
-    // Create an array of process objects
+    const n = arrivalTimes.length;
     const processes = [];
     for (let i = 0; i < n; i++) {
       processes.push({
@@ -73,11 +54,11 @@ export default function Srt() {
       });
     }
 
-    // Initialize arrays to store waiting times, turnaround times, and completion times
     const wt = Array(n).fill(0);
     const tat = Array(n).fill(0);
     const ct = Array(n).fill(0);
-    const startingTimes = Array(n).fill(0); // Array to store starting times
+    const startingTimes = Array(n).fill(0);
+    const ganttChart = [];
 
     let currentTime = 0;
     let completed = 0;
@@ -86,7 +67,6 @@ export default function Srt() {
       let minRemainingTime = Number.MAX_SAFE_INTEGER;
       let shortestProcessIndex = -1;
 
-      // Find the process with the shortest remaining burst time
       for (let i = 0; i < n; i++) {
         if (processes[i].arrival <= currentTime && processes[i].burst > 0) {
           if (processes[i].burst < minRemainingTime) {
@@ -98,19 +78,18 @@ export default function Srt() {
 
       if (shortestProcessIndex === -1) {
         currentTime++;
+        ganttChart.push("-");
         continue;
       }
 
-      // Record the starting time of the selected process
       if (startingTimes[shortestProcessIndex] === 0) {
         startingTimes[shortestProcessIndex] = currentTime;
       }
 
-      // Execute the shortest remaining time process for one time unit
       processes[shortestProcessIndex].burst--;
       currentTime++;
+      ganttChart.push(`P${shortestProcessIndex + 1}`);
 
-      // Check if the process is completed
       if (processes[shortestProcessIndex].burst === 0) {
         const process = processes[shortestProcessIndex];
         const completionTime = currentTime;
@@ -125,20 +104,17 @@ export default function Srt() {
       }
     }
 
-    // Calculate average waiting time
     const avgWt = wt.reduce((sum, waitingTime) => sum + waitingTime, 0) / n;
-
-    // Calculate average turnaround time
     const avgTat =
       tat.reduce((sum, turnaroundTime) => sum + turnaroundTime, 0) / n;
 
-    // Update state with the new values, including starting times
     setWt([...wt]);
     setTat([...tat]);
     setCt([...ct]);
-    setStartingTimes([...startingTimes]); // You can add this state variable
+    setStartingTimes([...startingTimes]);
     setAvgWt(avgWt);
     setAvgTat(avgTat);
+    setGanttChart(ganttChart);
   };
 
   return (
@@ -157,16 +133,13 @@ export default function Srt() {
             placeholder="1/2/3/..."
             style={{ width: "10vw" }}
             name="n"
-            // value={n}
             onChange={handleInputChange}
           />
         </label>
       </div>
       {arrivalTimes.map((arrival, index) => (
         <div key={index}>
-          <b>
-            For Process {index + 1} {"-> "}
-          </b>
+          <b>For Process {index + 1} - </b>
           <label>
             Arrival Time:
             <input
@@ -180,9 +153,9 @@ export default function Srt() {
           <label>
             Burst Time:
             <input
-             type="number"
-             min={1}
-             style={{ width: "6vw" }}
+              type="number"
+              min={1}
+              style={{ width: "6vw" }}
               value={burstTimes[index]}
               onChange={(e) => handleBurstTimeChange(index, e.target.value)}
             />
@@ -202,19 +175,29 @@ export default function Srt() {
           backgroundColor: "white",
         }}
       >
+        <h3>Gantt Chart</h3>
+        <div className="gantt-chart d-flex flex-row">{"|"}
+          {ganttChart.map((process, index) => (
+            <div key={index} className="gantt-bar">
+              {process } {"|"}
+            </div>
+
+          ))}
+        </div>
+        <h3>Process Table</h3>
         <table>
           <thead>
             <tr>
-              <th> - Process -</th>
-              <th>- Arrival Time -</th>
-              <th>- Burst Time -</th>
-              <th>- Starting Time -</th>
-              <th>- Ending Time -</th>
-              <th>- Waiting Time -</th>
-              <th>- Turnaround Time -</th>
+              <th>Process</th>
+              <th>Arrival Time</th>
+              <th>Burst Time</th>
+              <th>Starting Time</th>
+              <th>Ending Time</th>
+              <th>Waiting Time</th>
+              <th>Turnaround Time</th>
             </tr>
           </thead>
-          <tbody style={{ border: "1px solid white", textAlign: "center" }}>
+          <tbody>
             {Array.from({ length: n }, (_, index) => (
               <tr key={index}>
                 <td>P{index + 1}</td>
@@ -224,12 +207,10 @@ export default function Srt() {
                 <td>{ct[index]}</td>
                 <td>{wt[index]}</td>
                 <td>{tat[index]}</td>
-
               </tr>
             ))}
           </tbody>
         </table>
-
         <div>
           <p>Average Waiting Time: {avgWt.toFixed(2)}</p>
           <p>Average Turnaround Time: {avgTat.toFixed(2)}</p>

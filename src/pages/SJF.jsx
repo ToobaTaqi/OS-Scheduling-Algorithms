@@ -76,7 +76,7 @@ export default function SJF() {
   };
 
   return (
-    <div className="box d-flex flex-column align-items-center justify-content-center">
+    <div className=" d-flex flex-column align-items-center justify-content-center">
       <h4 className="text-center">
         <u>
           <b>Shortest Job First Algorithm</b>
@@ -96,7 +96,11 @@ export default function SJF() {
         </div>
         {Array.from({ length: numProcessesInput }, (_, index) => (
           <div key={index}>
-            <div>for Process {index + 1}:</div>
+            <b>
+              {" "}
+              For Process {index + 1} {"-> "}
+            </b>
+
             <label>Arrival Time:</label>
             <input
               type="number"
@@ -112,7 +116,7 @@ export default function SJF() {
             <label>Burst Time:</label>
             <input
               type="number"
-              min={0}
+              min={1}
               style={{ width: "6vw" }}
               value={bursts[index] || ""}
               onChange={(e) => {
@@ -126,149 +130,52 @@ export default function SJF() {
         <button className="btn lnk" onClick={calculateSJF}>
           Calculate SJF
         </button>
-
-        {startTimes.length > 0 && (
-          <table >
-            <thead>
-              <tr>
-                <th>Process</th>
-                <th>Arrival Time</th>
-                <th>Burst Time</th>
-                <th>Starting Time</th>
-                <th>Ending Time</th>
-                <th>Waiting Time</th>
-                <th>Turnaround Time</th> {/* Display Turnaround Time */}
-              </tr>
-            </thead>
-            <tbody>
-              {range.map((processId, index) => (
-                <tr key={index}>
-                  <td>P{processId}</td>
-                  <td>{arrivals[processId - 1]}</td>
-                  <td>{bursts[processId - 1]}</td>
-                  <td>{startTimes[processId - 1]}</td>
-                  <td>{endTimes[processId - 1]}</td>
-                  <td>{waitingTimes[processId - 1]}</td>
-                  <td>{turnaroundTimes[processId - 1]}</td> {/* Display Turnaround Time */}
+        <div
+          style={{
+            border: "1px solid white",
+            borderRadius: "15px",
+            padding: "10px",
+            textAlign: "center",
+            color: "#a6b0d9",
+            backgroundColor: "white",
+          }}
+        >
+          {startTimes.length > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>- Process -</th>
+                  <th>- Arrival Time -</th>
+                  <th>- Burst Time -</th>
+                  <th>- Starting Time -</th>
+                  <th>- Ending Time -</th>
+                  <th>- Waiting Time -</th>
+                  <th>- Turnaround Time -</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody style={{ border: "1px solid white", textAlign: "center" }}>
+                {range.map((processId, index) => (
+                  <tr key={index}>
+                    <td>P{processId}</td>
+                    <td>{arrivals[processId - 1]}</td>
+                    <td>{bursts[processId - 1]}</td>
+                    <td>{startTimes[processId - 1]}</td>
+                    <td>{endTimes[processId - 1]}</td>
+                    <td>{waitingTimes[processId - 1]}</td>
+                    <td>{turnaroundTimes[processId - 1]}</td>{" "}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
 
-        <div>
-          <p>Average Waiting Time: {averageWaitingTime}</p>
-          <p>Average Turnaround Time: {averageTurnaroundTime}</p>
+          <div>
+            <p>Average Waiting Time: {averageWaitingTime}</p>
+            <p>Average Turnaround Time: {averageTurnaroundTime}</p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-//   return (
-//     <div className="box d-flex flex-column align-items-center">
-//       <h4 className="text-center">
-//         <u>
-//           <b> Shortest Job First Algorithm </b>
-//         </u>
-//       </h4>
-//       <div className="d-flex flex-column align-items-center m-2">
-//         <div>
-//           <label>Number of Processes:</label>
-//           <input
-//             type="number"
-//             min={0}
-//             placeholder="1/2/3/..."
-//             style={{ width: "10vw" }}
-//             value={numProcessesInput}
-//             onChange={handleNumProcessesChange}
-//           />
-//           <button className="lnk btn" onClick={handleRange}>
-//             Submit
-//           </button>
-//         </div>
-//         {/* <div> */}
-//         {range.length > 0 &&
-//           range.map((index) => (
-//             <div key={index}>
-//               {/* <div> */}
-//               <label>Arrival Time for P{index + 1}:</label>
-//               <input
-//                 type="number"
-//                 min={0}
-//                 placeholder={`P ${index + 1}`}
-//                 style={{ width: "10vw" }}
-//                  value={arrivalTimes[index]}
-//                 onChange={(e) => handleArrivalTimeChange(e, index)}
-                
-//               />
-
-//               {/* </div> */}
-//               {/* <div> */}
-//               <label>Burst Time for P{index + 1}:</label>
-//               <input
-//                 type="number"
-//                 min={0}
-//                 placeholder={`P ${index + 1}`}
-//                 style={{ width: "10vw" }}
-//                 // value={burstTimes[index]}
-//                 onChange={(e) => handleBurstTimeChange(e, index)}
-//                 pattern="[0-9]*"
-//               />
-//               {/* </div> */}
-//             </div>
-//           ))}
-//         <button className="btn lnk" onClick={handleExecution}>
-//           Execute
-//         </button>
-//         <div>
-//           <h5>Execution Table:</h5>
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>Process</th>
-//                 <th>Arrival Time</th>
-//                 <th>Burst Time</th>
-//                 <th>Starting Time</th>
-//                 <th>Ending Time</th>
-//                 <th>Waiting Time</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {processQueue.map((process, index) => (
-//                 <tr key={process.id}>
-//                   <td>{index + 1}</td> {/* Process ID */}
-//                   <td>{process.arrivalTime}</td>
-//                   <td>{process.burstTime}</td>
-//                   <td>
-//                     {Math.max(
-//                       process.arrivalTime,
-//                       index > 0 ? processQueue[index - 1].endTime : 0
-//                     )}
-//                   </td>{" "}
-//                   {/* Start Time */}
-//                   <td>
-//                     {Math.max(
-//                       process.arrivalTime,
-//                       index > 0 ? processQueue[index - 1].endTime : 0
-//                     ) + process.burstTime}
-//                   </td>{" "}
-//                   {/* End Time */}
-//                   <td>
-//                     {Math.max(
-//                       process.arrivalTime,
-//                       index > 0 ? processQueue[index - 1].endTime : 0
-//                     ) - process.arrivalTime}
-//                   </td>{" "}
-//                   {/* Waiting Time */}
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-
-//         {/* </div> */}
-//       </div>
-//     </div>
-//   );
-// }

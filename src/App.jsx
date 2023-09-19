@@ -23,10 +23,11 @@ export default function App() {
           <Route path="/sjf" element={<SJF />} />
         </Routes>
       </div> */}
-      <div className="row justify-content-center">
+     
         <div
           className="col"
-          style={{ width: "100vw"}}
+          style={{ width: "100vw",height: "60vh", overflowY: "auto",  marginTop: "30vh", marginBottom: "10vh"}}
+          // className="col-12" style={{ minHeight: "calc(100vh - 60px)" }}
         >
           <Routes>
             <Route path="/" element={<Options />} />
@@ -36,6 +37,6 @@ export default function App() {
           </Routes>
         </div>
       </div>
-    </div>
+   
   );
 }

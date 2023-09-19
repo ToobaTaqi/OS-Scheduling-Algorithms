@@ -35,9 +35,27 @@ export default function HRRN() {
   };
 
   // Function to handle input change for burst times
+  // const handleBurstTimeChange = (index, value) => {
+  //   const newBurstTimes = [...burstTimes];
+  //   newBurstTimes[index] = parseInt(value, 10);
+  //   setBurstTimes(newBurstTimes);
+  // };
   const handleBurstTimeChange = (index, value) => {
     const newBurstTimes = [...burstTimes];
-    newBurstTimes[index] = parseInt(value, 10);
+    const parsedValue = parseInt(value, 10);
+
+    // Check if the parsed value is a positive integer greater than or equal to 1
+    if (!isNaN(parsedValue) && parsedValue >= 1) {
+      newBurstTimes[index] = parsedValue;
+    } else {
+      // Display an error message or handle the validation error as needed
+      alert(
+        "Burst time must be a positive integer greater than or equal to 1."
+      );
+      // Optionally, you can set a default burst time or handle the error differently.
+      // newBurstTimes[index] = 1; // Set a default burst time of 1
+    }
+
     setBurstTimes(newBurstTimes);
   };
 
@@ -46,6 +64,12 @@ export default function HRRN() {
     // Create an array to store the remaining burst times for each process
     const remainingBurstTimes = [...burstTimes];
 
+    // Find the earliest arrival time among all processes
+    const earliestArrivalTime = Math.min(...arrivalTimes);
+
+    // Initialize the current time to the earliest arrival time
+    let currentTime = earliestArrivalTime;
+
     // Create arrays to store other metrics
     const newCompletionTimes = Array(n).fill(0);
     const newNormalizedTurnaroundTimes = Array(n).fill(0);
@@ -53,9 +77,6 @@ export default function HRRN() {
     const newStartingTimes = Array(n).fill(0);
     const newWaitingTimes = Array(n).fill(0);
     const newTurnaroundTimes = Array(n).fill(0);
-
-    // Initialize the current time
-    let currentTime = 0;
 
     // Perform HRRN calculations
     while (true) {
@@ -131,18 +152,21 @@ export default function HRRN() {
   };
 
   return (
-    <div className=" box d-flex flex-column align-items-center justify-content-center">
+    <div className=" d-flex flex-column align-items-center justify-content-center">
       <h4 className="text-center">
         <u>
-          <b>Highest Response Ratio Next</b>
+          <b>Highest Response Ratio Next Algorithm</b>
         </u>
       </h4>
-      <div>
+      <div className="d-flex flex-column align-items-center m-2">
         <div>
           <label>
             Enter the number of processes:
             <input
               type="number"
+              min="0"
+              placeholder="1/2/3/..."
+              style={{ width: "10vw" }}
               name="n"
               value={n}
               onChange={handleInputChange}
@@ -151,42 +175,63 @@ export default function HRRN() {
         </div>
         {arrivalTimes.map((arrival, index) => (
           <div key={index}>
+            <b>
+              {" "}
+              For Process {index + 1} {"-> "}
+            </b>
             <label>
-              Arrival Time for Process {index + 1}:
+              Arrival Time:
               <input
                 type="number"
+                min={0}
+                style={{ width: "6vw" }}
                 value={arrival}
                 onChange={(e) => handleArrivalTimeChange(index, e.target.value)}
               />
             </label>
             <label>
-              Burst Time for Process {index + 1}:
+              Burst Time:
               <input
                 type="number"
+                min={0}
+                style={{ width: "6vw" }}
                 value={burstTimes[index]}
                 onChange={(e) => handleBurstTimeChange(index, e.target.value)}
               />
             </label>
           </div>
         ))}
-        <button onClick={findWaitingTurnaroundCompletionTime}>Calculate</button>
-        <div>
-          <h2>Process Table</h2>
+        <button
+          className="btn lnk"
+          onClick={findWaitingTurnaroundCompletionTime}
+        >
+          Calculate HRRN
+        </button>
+        <div
+          style={{
+            border: "1px solid white",
+            borderRadius: "15px",
+            padding: "10px",
+            textAlign: "center",
+            color: "#a6b0d9",
+            backgroundColor: "white",
+          }}
+        >
           <table>
             <thead>
               <tr>
-                <th>Process ID</th>
-                <th>Arrival Time</th>
-                <th>Burst Time</th>
-                <th>Starting Time</th>
-                <th>Completion Time</th>
-                <th>Waiting Time</th>
-                <th>Turnaround Time</th>
-                <th>Normalized Turnaround Time</th>
-                <th>Response Ratio</th>
+                <th> - Process -</th>
+                <th>- Arrival Time -</th>
+                <th>- Burst Time -</th>
+                <th>- Starting Time -</th>
+                <th>- Ending Time -</th>
+                <th>- Waiting Time -</th>
+                <th>- Turnaround Time -</th>
+                <th>- Normalized T.T. -</th>
+                <th>- Response Ratio -</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody style={{ border: "1px solid white", textAlign: "center" }}>
               {Array.from({ length: n }, (_, index) => (
                 <tr key={index}>
                   <td>P{index + 1}</td>
@@ -202,13 +247,12 @@ export default function HRRN() {
               ))}
             </tbody>
           </table>
-        </div>
-        <div>
-          <h2>Results</h2>
-          <p>Average Waiting Time: {calculateAvgWaitingTime().toFixed(2)}</p>
-          <p>
-            Average Turnaround Time: {calculateAvgTurnaroundTime().toFixed(2)}
-          </p>
+          <div>
+            <p>Average Waiting Time: {calculateAvgWaitingTime().toFixed(2)}</p>
+            <p>
+              Average Turnaround Time: {calculateAvgTurnaroundTime().toFixed(2)}
+            </p>
+          </div>
         </div>
       </div>
     </div>
